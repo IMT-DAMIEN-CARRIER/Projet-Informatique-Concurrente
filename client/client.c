@@ -3,12 +3,13 @@
 //
 
 #include <stdio.h>
+#include "client.h"
 
-void *main(void *pointeur) {
+void *client(void *pointeur) {
 
     Arguments *args = (Arguments *) pointeur;
 
-    while(1):
+    while (1) {
         //récupération des informations nécessaires à l'envoi
 
         //création de la socket
@@ -16,5 +17,6 @@ void *main(void *pointeur) {
         //connexion à la socket
 
         //envoi du message
+    }
 }
 

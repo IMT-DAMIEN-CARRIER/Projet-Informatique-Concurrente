@@ -5,7 +5,7 @@
 #ifndef PROJET_INFORMATIQUE_CONCURRENTE_CLIENT_H
 #define PROJET_INFORMATIQUE_CONCURRENTE_CLIENT_H
 
-void *main(void*);
+void *client(void*);
 
 typedef struct Arguments {
     char *hote;
