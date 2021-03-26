@@ -4,8 +4,17 @@
 
 #include <stdio.h>
 
-int main() {
-    printf("Hello World !");
-    return 0;
+void *main(void *pointeur) {
+
+    Arguments *args = (Arguments *) pointeur;
+
+    while(1):
+        //récupération des informations nécessaires à l'envoi
+
+        //création de la socket
+
+        //connexion à la socket
+
+        //envoi du message
 }
 
