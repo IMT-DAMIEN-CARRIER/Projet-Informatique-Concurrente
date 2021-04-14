@@ -21,9 +21,13 @@ void *connection_handler(void *server_socket)
     while ((message_size = recv(sock, client_message, 2000, 0)) > 0)
     {
         printf("Client envoi: %s", client_message);
-        //Send the message back to client
+
+        // Send the message back to client
         const char OK_MESSAGE[] = "Serveur: message reçu\n";
         write(sock, OK_MESSAGE, strlen(OK_MESSAGE));
+
+        // Clear client_message
+        memset(client_message, 0, sizeof client_message);
     }
 
     if (message_size == 0)
