@@ -35,7 +35,15 @@ int main() {
         return 1;
     }
 
-    puts("Connecté\n");
+    for(int i = 0; i<2; i++) {
+        //Réception de s deux premiers messages du serveur qui annoncent
+        //que la connexion est établie
+        if (recv(socket_desc, server_reply, sizeof(server_reply), 0) < 0) {
+            puts("Erreur de réception du message depuis le serveur");
+        }
+        puts(server_reply);
+        bzero(server_reply, sizeof(server_reply));
+    }
 
     while(1) {
         //Lecture de l'entrée utilisateur
