@@ -38,24 +38,23 @@ int main() {
     puts("Connecté\n");
 
     while(1) {
-
         //Lecture de l'entrée utilisateur
-        char message[20];
+        char message[2000];
         printf("Votre message : ");
-        fgets(message,20, stdin);
+        fgets(message, sizeof(message), stdin);
 
         if (send(socket_desc, message, strlen(message), 0) < 0) {
-            puts("Send failed");
+            puts("Erreur d'envoi du message");
             return 1;
         }
-        puts("Données envoyées\n");
+        bzero(message, sizeof(message));
 
         //Réception de la réponse du serveur
-        if (recv(socket_desc, server_reply, 2000, 0) < 0) {
-            puts("recv failed");
+        if (recv(socket_desc, server_reply, sizeof(server_reply), 0) < 0) {
+            puts("Erreur de réception du message depuis le serveur");
         }
-        puts("Réponse reçu\n");
         puts(server_reply);
+        bzero(server_reply, sizeof(server_reply));
 
     }
     close(socket_desc);
