@@ -1,10 +1,16 @@
-all: server_ipv4_leger server_unix_leger
+all: serveur_ipv4_leger serveur_unix_leger serveur_ipv4_lourd serveur_unix_lourd
 
-server_ipv4_leger: server_ipv4_leger.c
-	gcc server_ipv4_leger.c -o server_ipv4_leger -Wall -lpthread
+serveur_ipv4_leger: serveur_ipv4_leger.c
+	gcc serveur_ipv4_leger.c -o serveur_ipv4_leger -Wall -lpthread
 
-server_unix_leger: server_unix_leger.c
-	gcc server_unix_leger.c -o server_unix_leger -Wall -lpthread
+serveur_unix_leger: serveur_unix_leger.c
+	gcc serveur_unix_leger.c -o serveur_unix_leger -Wall -lpthread
+
+serveur_ipv4_lourd: serveur_ipv4_lourd.c
+	gcc serveur_ipv4_lourd.c -o serveur_ipv4_lourd -Wall
+
+serveur_unix_lourd: serveur_unix_lourd.c
+	gcc serveur_unix_lourd.c -o serveur_unix_lourd -Wall
 
 clean:
-	rm -rf server_ipv4_leger server_unix_leger
+	rm -rf serveur_ipv4_leger serveur_unix_leger serveur_ipv4_lourd serveur_unix_lourd

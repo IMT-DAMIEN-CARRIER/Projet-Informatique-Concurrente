@@ -25,7 +25,7 @@ int main()
     }
 
     server.sun_family = AF_UNIX;
-    strcpy(server.sun_path, "/tmp/socketLocale.txt");
+    strcpy(server.sun_path, "/tmp/socketLocale2.txt");
     addr_size = strlen(server.sun_path) + sizeof(server.sun_family);
 
     //connexion au serveur

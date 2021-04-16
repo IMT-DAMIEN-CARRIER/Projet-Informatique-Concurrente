@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     // Création du socket
     check(server_socket = socket(AF_UNIX, SOCK_STREAM, 0), "Impossible de creer le socket");
 
-    // Préparation de la structure sockaddr_in
+    // Préparation de la structure sockaddr_un
     server.sun_family = AF_UNIX;
     strcpy(server.sun_path, "/tmp/socketLocale.txt");
     addr_size = strlen(server.sun_path) + sizeof(server.sun_family);
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 
         check(pthread_create(&sniffer_thread, NULL, *connection_handler, (void *)new_sock), "Impossible de creer le thead");
 
-        pthread_join(sniffer_thread, NULL);
+        // pthread_join(sniffer_thread, NULL);
         printf("Thread assigne\n");
     }
 

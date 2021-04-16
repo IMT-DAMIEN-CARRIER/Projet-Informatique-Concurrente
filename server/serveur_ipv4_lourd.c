@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <errno.h>
 #include <string.h> //strlen
 #include <sys/socket.h>
 #include <arpa/inet.h> //inet_addr
 #include <unistd.h>    //write
-#include <pthread.h>
+#include <signal.h>
 #define PORT 8080
 
-void *connection_handler(void *server_socket)
+void connection_handler(int *server_socket)
 {
     //Get the socket descriptor
-    int sock = *(int *)server_socket;
+    int sock = *server_socket;
     unsigned int message_size;
     char *message, client_message[2000];
 
@@ -32,7 +34,7 @@ void *connection_handler(void *server_socket)
 
     if (message_size == 0)
     {
-        puts("Client disconnected");
+        puts("Le client s'est deconnecte");
         fflush(stdout);
     }
     else if (message_size == -1)
@@ -42,8 +44,6 @@ void *connection_handler(void *server_socket)
 
     //Free the socket pointer
     free(server_socket);
-
-    return 0;
 }
 
 int check(int socket_state, const char *message)
@@ -89,14 +89,25 @@ int main(int argc, char *argv[])
         message = "Serveur: Connexion etablie\n";
         write(new_socket, message, strlen(message));
 
-        pthread_t sniffer_thread;
         new_sock = malloc(sizeof(int));
         *new_sock = new_socket;
 
-        check(pthread_create(&sniffer_thread, NULL, *connection_handler, (void *)new_sock), "Impossible de creer le thead");
+        pid_t sniffer_pid = fork();
 
-        pthread_join(sniffer_thread, NULL);
-        printf("Thread assigne\n");
+        if (sniffer_pid == -1)
+        {
+            perror("Impossible de creer le fork\n");
+        }
+        else if (sniffer_pid == 0)
+        {
+            // dans le fils
+            printf("Fils: PID %d\n", getpid());
+            connection_handler((void *)new_sock);
+            puts("Fils: FIN");
+            exit(0);
+        }
+
+        puts("Fork assigne");
     }
 
     check(new_socket, "Le serveur n'a pas reussit a accepter la connexion");
