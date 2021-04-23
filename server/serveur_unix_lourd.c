@@ -9,40 +9,40 @@
 #include <unistd.h>    //write
 #include <signal.h>
 
+#define MESSAGE_SIZE 2000
+#define FILENAME "/tmp/socketLocale.txt"
+
 void connection_handler(int *server_socket)
 {
-    //Get the socket descriptor
+    // Création du descripteur du socket
     int sock = *server_socket;
     unsigned int message_size;
-    char *message, client_message[2000];
+    char client_message[MESSAGE_SIZE];
 
-    message = "Serveur: Tu peux maintenant m'envoyer des messages\n";
-    write(sock, message, strlen(message));
-
-    //Receive a message from client
-    while ((message_size = recv(sock, client_message, 2000, 0)) > 0)
+    // En attente de recevoir d'un message du client
+    while ((message_size = recv(sock, client_message, MESSAGE_SIZE, 0)) > 0)
     {
         printf("Client envoi: %s", client_message);
 
-        // Send the message back to client
+        // Renvoi du message vers le client
         const char OK_MESSAGE[] = "Serveur: message reçu\n";
         write(sock, OK_MESSAGE, strlen(OK_MESSAGE));
 
-        // Clear client_message
+        // On nettoie le message reçu par le client
         memset(client_message, 0, sizeof client_message);
     }
 
     if (message_size == 0)
     {
-        puts("Le client s'est deconnecte");
+        puts("Client déconnecté");
         fflush(stdout);
     }
     else if (message_size == -1)
     {
-        perror("recv failed");
+        perror("La réception à échoué");
     }
 
-    //Free the socket pointer
+    // On désalloue le socket
     free(server_socket);
 }
 
@@ -67,19 +67,18 @@ int main(int argc, char *argv[])
 
     // Préparation de la structure sockaddr_un
     server.sun_family = AF_UNIX;
-    strcpy(server.sun_path, "/tmp/socketLocale2.txt");
+    strcpy(server.sun_path, FILENAME);
     addr_size = strlen(server.sun_path) + sizeof(server.sun_family);
 
     // Bind du socket
     check(bind(server_socket, (struct sockaddr *)&server, addr_size), "Erreur lors du bind du socket");
     printf("Bind effectue\n");
 
-    // Ecoute du socket
+    // File d'attente de 3 connexions
     check(listen(server_socket, 3), "Erreur lors de l'ecoute du socket");
 
     // Accepte les connexions qui arrivent
     printf("En attente de connexions entrantes...\n");
-    // addr_size = sizeof(server);
 
     while ((new_socket = accept(server_socket, (struct sockaddr *)&client, (socklen_t *)&addr_size)))
     {
@@ -101,7 +100,6 @@ int main(int argc, char *argv[])
         else if (sniffer_pid == 0)
         {
             // dans le fils
-            printf("Fils: PID %d\n", getpid());
             connection_handler((void *)new_sock);
             puts("Fils: FIN");
             exit(0);

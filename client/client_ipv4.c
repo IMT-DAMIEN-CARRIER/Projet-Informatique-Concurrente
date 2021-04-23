@@ -3,19 +3,23 @@
 //
 
 #include <stdio.h>
-#include <string.h> //strlen
+#include <string.h>
 #include <sys/socket.h>
-#include <arpa/inet.h> //inet_addr
+#include <arpa/inet.h>
 #include <unistd.h>
+
+#define MESSAGE_SIZE 2000
+#define ADDRESS "127.0.0.1"
+#define PORT 8080
 
 int main()
 {
 
     int socket_desc;
     struct sockaddr_in server;
-    char server_reply[2000];
+    char server_reply[MESSAGE_SIZE];
 
-    //création de la socket
+    // Création de la socket
     socket_desc = socket(AF_INET, SOCK_STREAM, 0);
 
     if (socket_desc == -1)
@@ -23,38 +27,35 @@ int main()
         printf("Erreur au moment de la création de la socket");
     }
 
-    //conversion de l'adresse IP en Long
-    server.sin_addr.s_addr = inet_addr("127.0.0.1");
-
+    // Conversion de l'adresse IP en Long
+    server.sin_addr.s_addr = inet_addr(ADDRESS);
     server.sin_family = AF_INET;
-    server.sin_port = htons(8080);
+    server.sin_port = htons(PORT);
 
-    //connexion au serveur
+    // Connexion au serveur
     if (connect(socket_desc, (struct sockaddr *)&server, sizeof(server)) < 0)
     {
         puts("Erreur de connexion");
         return 1;
     }
 
-    for (int i = 0; i < 2; i++)
+    // Réception d'un message du serveur pour dire que la connexion a été établi
+    if (recv(socket_desc, server_reply, sizeof(server_reply), 0) < 0)
     {
-        //Réception de s deux premiers messages du serveur qui annoncent
-        //que la connexion est établie
-        if (recv(socket_desc, server_reply, sizeof(server_reply), 0) < 0)
-        {
-            puts("Erreur de réception du message depuis le serveur");
-        }
-        puts(server_reply);
-        bzero(server_reply, sizeof(server_reply));
+        puts("Erreur de réception du message depuis le serveur");
     }
+    puts(server_reply);
+    bzero(server_reply, sizeof(server_reply));
 
     while (1)
     {
-        //Lecture de l'entrée utilisateur
-        char message[2000];
+        char message[MESSAGE_SIZE];
+
+        // Lecture de l'entrée utilisateur
         printf("Votre message : ");
         fgets(message, sizeof(message), stdin);
 
+        // Envoi du message
         if (send(socket_desc, message, strlen(message), 0) < 0)
         {
             puts("Erreur d'envoi du message");
@@ -62,7 +63,7 @@ int main()
         }
         bzero(message, sizeof(message));
 
-        //Réception de la réponse du serveur
+        // Réception de la réponse du serveur
         if (recv(socket_desc, server_reply, sizeof(server_reply), 0) < 0)
         {
             puts("Erreur de réception du message depuis le serveur");
@@ -70,6 +71,8 @@ int main()
         puts(server_reply);
         bzero(server_reply, sizeof(server_reply));
     }
+
+    // On ferme la socket
     close(socket_desc);
 
     return 0;
