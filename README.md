@@ -1,6 +1,6 @@
 # Projet informatique concurrente et répartie
 
-Alex BROUSSARD, Damien CARRIER et Mathis ENJOLRAS
+_Alex BROUSSARD, Damien CARRIER et Mathis ENJOLRAS_
 
 ## Prérequis
 
@@ -11,10 +11,10 @@ Alex BROUSSARD, Damien CARRIER et Mathis ENJOLRAS
 
 Il existe 2 Makefiles :
 
-- dans le dossier `client`
-- dans le dossier `serveur`
+- dossier `client`
+- dossier `serveur`
 
-Il suffit de lancer la commande suivant :
+Il suffit de lancer la commande suivante :
 
 ```bash
 $ make
@@ -22,15 +22,13 @@ $ make
 
 ## Lancement du projet
 
-- Il suffit de lancer en premier lieu le serveur.
-  Par exemple :
+- Il suffit de lancer en premier lieu le serveur. Par exemple :
 
 ```bash
 $ ./serveur_ipv4_leger
 ```
 
-- Ensuite, lancer 1 à 3 clients de la meme famille de socket que le serveur.
-  Par exemple :
+- Ensuite, lancer 1 à 3 clients de la même famille de socket que le serveur. Par exemple :
 
 ```bash
 $ ./client_ipv4
@@ -38,4 +36,5 @@ $ ./client_ipv4
 
 ## Utilisation
 
-Rien de plus simple, il suffit de saisir des messages côté client et confirmer avec appuyant sur la touche "Entréé".
+Rien de plus simple, il suffit de saisir des messages côté client et confirmer avec appuyant sur la touche "Entrée".
+Il s'affiche ensuite côté serveur.
